@@ -2,6 +2,9 @@
 
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
+#include "Engine/TriggerVolume.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
+#include "Engine.h"
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -19,20 +22,39 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AActor* owner = GetOwner();
-	
-	FRotator newRotation = FRotator(0.0f, 60.0f, 0.0f);
+	APawn* myPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	actorThatOpens = myPawn;
 
-	owner->SetActorRotation(newRotation);
-	
+	owner = GetOwner();
 }
 
+void UOpenDoor::OpenDoor()
+{
+	//owner->SetActorRotation(FRotator(0.0f, openAngle, 0.0f));
+	owner->SetActorRelativeRotation(FRotator(0.0f, openAngle, 0.0f));
+}
+
+void UOpenDoor::CloseDoor()
+{
+	//owner->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
+	owner->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+}
 
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (pressurePlate && actorThatOpens && pressurePlate->IsOverlappingActor(actorThatOpens))
+	{
+		OpenDoor();
+		doorLastOpenTime = GetWorld()->GetTimeSeconds();
+	}
+
+	if (GetWorld()->GetTimeSeconds() - doorLastOpenTime > doorCloseDelay)
+	{
+		CloseDoor();
+	}
+
 }
 
