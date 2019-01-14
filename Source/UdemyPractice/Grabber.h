@@ -27,6 +27,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	FVector GetReachLineStart() const;
+	FVector GetReachLineEnd() const;
+
 private:
 	AActor* owner;
 	float reach;
