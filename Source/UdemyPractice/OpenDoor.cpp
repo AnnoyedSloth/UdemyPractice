@@ -6,6 +6,7 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Engine.h"
 
+
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
 {
@@ -29,14 +30,14 @@ void UOpenDoor::BeginPlay()
 
 void UOpenDoor::OpenDoor()
 {
-	//owner->SetActorRotation(FRotator(0.0f, openAngle, 0.0f));
-	owner->SetActorRelativeRotation(FRotator(0.0f, openAngle, 0.0f));
+	//owner->SetActorRelativeRotation(FRotator(0.0f, openAngle, 0.0f));
+	onOpen.Broadcast();
 }
 
 void UOpenDoor::CloseDoor()
 {
-	//owner->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
-	owner->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+	//owner->SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+	onClose.Broadcast();
 }
 
 // Called every frame
@@ -46,7 +47,7 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	if (pressurePlate && GetTotalMassOfActorsOnPlate()>50.0f)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%f"), GetTotalMassOfActorsOnPlate())
+		//UE_LOG(LogTemp, Warning, TEXT("%f"), GetTotalMassOfActorsOnPlate())
 		OpenDoor();
 		doorLastOpenTime = GetWorld()->GetTimeSeconds();
 	}

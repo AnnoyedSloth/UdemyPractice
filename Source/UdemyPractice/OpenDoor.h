@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "OpenDoor.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoorEvent);
+
 class ATriggerVolume;
 
 
@@ -29,6 +32,11 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UPROPERTY(BlueprintAssignable, Category = Movement)
+		FDoorEvent onOpen;
+	UPROPERTY(BlueprintAssignable, Category = Movement)
+		FDoorEvent onClose;
+
 private:
 	UPROPERTY(VisibleAnywhere,Category = Movement)
 	float openAngle = 90.0f;
@@ -36,8 +44,11 @@ private:
 	UPROPERTY(EditAnywhere, Category = Movement)
 	ATriggerVolume* pressurePlate;
 
-	UPROPERTY(EditAnywhere = Movement)
+	UPROPERTY(EditAnywhere, Category = Movement)
 		float doorCloseDelay = 1.0f;
+
+	UPROPERTY(EditAnywhere, Category = Movement)
+		float triggerMass = 30.0f;
 
 	float doorLastOpenTime;
 
